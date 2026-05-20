@@ -1,0 +1,17 @@
+include mixins/alert 
+//include mixins/nav
+
+doctype html
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(name="viewport" content="widht=device-widht, initial-scale=1.0")
+        link(rel="stylesheet", href="/styles.css")
+        block metadata
+    body
+        //+nav 
+        main 
+         +alert(alert)
+
+         div(style='padding: 20px')
+          block content

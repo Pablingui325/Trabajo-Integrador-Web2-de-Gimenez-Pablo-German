@@ -1,0 +1,44 @@
+extends layout.pug 
+
+block metadata 
+    title Creacion de Usuario 
+
+block content 
+    h1 Ingrese los datos solicitados para crear usuario.
+form(role='form' method="POST" action='/crear-usuario')
+    div.form-action
+        label(for="firstName")  Ingrese su nombre:
+        input#firstName.form-action(type="text" name='firstName' required)
+        br
+    div.form-action 
+        label(for="lastName") Ingrese su apellido: 
+        input#lastNme.form-action(type="text" name='lastName' required)
+        br
+    div.form-action
+        label(for="birthDay") Ingrese su fecha de nacimiento: 
+        input#birthDay.form-action(type="date" name='birthDay' required)
+        br
+    div.form-action 
+        label(for="gender") Seleccione su genero: 
+        select#gender.form-action(name="gender")
+            option(value="Masculino") Masculino
+            option(value="Femenino") Femenino
+            option(value="Otro") Otro
+         br
+    div.form-action 
+        label(for="phone") Ingrese su numero de telefono: 
+        input#phone.form-action(type="tel", name="phone" required)
+        br
+    div.form-action
+        label(for="password")  Escriba su contraseña:
+        input#password.form-action(type="password", name="password" required)
+        br
+    div.form-action
+        label(for="confirmPassword") Confirme su contraseña: 
+        input#confirmPassword.form-action(type="password" name='confirmPassword' required)
+        br
+    div.form-action 
+        input(type="hidden" name="_csrf" value=csrfToken)
+        br
+        button.btn.btn-success(type="submit") Registrarse
+    

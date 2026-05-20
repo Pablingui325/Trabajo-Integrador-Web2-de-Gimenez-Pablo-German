@@ -1,0 +1,84 @@
+para inicioSesion.pug: input(type="hidden" name="_csrf" value=csrfToken)
+
+para instalar: npm install cookie-parser
+npm install csrf-csrf
+
+para app.js:
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const { doubleCsrf } = require('csrf-csrf'); // Importamos la nueva librería
+
+const app = express();
+
+// Configurar Pug como motor de plantillas
+app.set('view engine', 'pug');
+
+// 1. Middlewares básicos obligatorios
+app.use(express.urlencoded({ extended: true })); 
+const COOKIE_SECRET = 'un_secreto_muy_largo_y_seguro_123456';
+app.use(cookieParser(COOKIE_SECRET)); // Es obligatorio pasarle el secreto
+
+// 2. Configurar la protección CSRF
+const {
+    doubleCsrfProtection, // El middleware que protege las rutas POST
+    generateToken,        // La función para crear el token
+} = doubleCsrf({
+    getSecret: () => COOKIE_SECRET,
+    cookieName: "x-csrf-token",
+    cookieOptions: {
+        httpOnly: true,
+        sameSite: "lax", // Protege contra ataques cross-site básicos
+        secure: false,   // Cambiar a 'true' si usas HTTPS en producción
+    },
+    size: 64,
+    // Métodos que NO se validarán (Los formularios GET no necesitan CSRF)
+    ignoredMethods: ["GET", "HEAD", "OPTIONS"], 
+    getTokenFromRequest: (req) => {
+        // Le indicamos a la librería dónde buscar el token que viene del Pug
+        return req.body._csrf; 
+    },
+});
+
+// 3. Middleware para inyectar el token en tus archivos Pug automáticamente
+app.use((req, res, next) => {
+    // Genera el token y lo guarda en una cookie del navegador
+    const token = generateToken(req, res);
+    // Lo hace accesible en Pug bajo la variable #{csrfToken}
+    res.locals.csrfToken = token; 
+    next();
+});
+
+// --- RUTAS DE EJEMPLO ---
+
+// Mostrar pantalla de Login
+app.get('/login', (req, res) => {
+    res.render('inicioSesion');
+});
+
+// Mostrar pantalla de Registro
+app.get('/crear-usuario', (req, res) => {
+    res.render('crearUsuario');
+});
+
+// Procesar el registro (Añadimos doubleCsrfProtection para proteger la ruta)
+app.post('/crear-usuario', doubleCsrfProtection, (req, res) => {
+    const { nombre, apellido, contrasena, confirmarContrasena } = req.body;
+
+    if (contrasena !== confirmarContrasena) {
+        return res.status(400).send('Las contraseñas no coinciden.');
+    }
+
+    res.send(`Usuario ${nombre} creado de manera segura. ¡El token CSRF funcionó!`);
+});
+
+// Manejo de errores por si el token CSRF falla o expira
+app.use((error, req, res, next) => {
+    if (error.code === "EBADCSRFTOKEN") {
+        return res.status(403).send("Error de seguridad: Sesión inválida o formulario caducado.");
+    }
+    next(error);
+});
+
+app.listen(3000, () => console.log('Servidor corriendo en http://localhost:3000'));
+
+

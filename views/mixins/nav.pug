@@ -1,0 +1,9 @@
+mixin item(path, name, active)
+    li 
+        if active 
+            a(href=path class='active') #{name}
+        else 
+            a(href=path) #{name}
+
+mixin  nav 
+    nav

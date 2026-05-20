@@ -1,0 +1,23 @@
+extends layout.pug 
+
+block metadata 
+    title Inicio de Sesion 
+
+block content 
+    h1 Inicia sesion para ingresar si ya tienes un usuario 
+form(role='form' method="POST" action='/login')
+    div.form-action
+        label(for="email") Correo: 
+        input#email.form-action(type="email", placeholder='name@email.com' name='email' required)
+        br
+    div.form-action
+        label(for="password") Contraseña: 
+        input#password.form-action(type="password" name='password' required)
+        br
+    div.form-action 
+        input(type="hidden" name="_csrf" value=csrfToken)
+        br
+        button.btn.btn-primary(type='submit') Ingresar
+        br
+    h2 ¿No tenes cuenta? Podes crear una: 
+    a(href="./crear-usuario") Crear Usuario 
