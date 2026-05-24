@@ -5,6 +5,7 @@ import { doubleCsrf } from "csrf-csrf";
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const COOKIE_SECRET = "un_secreto_muy_largo_y_seguro_123456";
@@ -61,6 +62,10 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, (err) => {
+  if (err) {
+    console.error("Error al iniciar el servidor:", err);
+    return;
+  }
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });

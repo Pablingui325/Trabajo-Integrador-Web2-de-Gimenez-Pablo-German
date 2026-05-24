@@ -1,10 +1,12 @@
 extends layout.pug 
 
 block metadata 
-    title Inicio de Sesion 
+    title Fotaza - Inicio de Sesion
+    meta(name="description" content="pagina para iniciar sesion") 
 
 block content 
-    h1 Inicia sesion para ingresar si ya tienes un usuario 
+    h1 Bienvenido a Fotaza
+    h2 Inicia sesion para ingresar si ya tienes un usuario 
 form(role='form' method="POST" action='/login')
     div.form-action
         label(for="email") Correo: 
