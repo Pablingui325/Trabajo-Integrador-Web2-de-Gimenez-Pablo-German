@@ -1,10 +1,4 @@
-mixin alert(alert=undefined)
-    if alert 
-        case alert.status 
-            when "error"
-                div.alert.error 
-                    p #{alert.text}
-            when "success"
-            default 
-                div.alert.success 
-                    p #{alert.text}
+mixin alert(type, message)
+    div(class=`alert alert-${type} alert-dismissable fade show` role="alert")
+        span= message 
+        button.btn-close(type='button' data-bs-dismiss="alert" aria-label="Close")
