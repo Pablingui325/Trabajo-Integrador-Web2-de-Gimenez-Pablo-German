@@ -39,11 +39,11 @@ app.get("/login", (req, res) => {
   res.render("inicioSesion");
 });
 
-app.get("/crear-usuario", (req, res) => {
+app.get("/signup", (req, res) => {
   res.render("crearUsuario");
 });
 
-app.post("/crear-usuario", doubleCsrfProtection, (req, res) => {
+app.post("/signup", doubleCsrfProtection, (req, res) => {
   const { firstName, lastName, password, confirmPassword } = req.body;
   if (password !== confirmPassword) {
     return res.status(400).send("Las contraseñas no coinciden");
