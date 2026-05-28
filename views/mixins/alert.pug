@@ -1,4 +1,4 @@
 mixin alert(type, message)
-    div(class=`alert alert-${type} alert-dismissable fade show` role="alert")
-        span= message 
-        button.btn-close(type='button' data-bs-dismiss="alert" aria-label="Close")
+  div(class=`alert alert-${type} alert-dismissible fade show` role="alert")
+    span= message
+    button.btn-close(type="button" data-bs-dismiss="alert" aria-label="Close")
