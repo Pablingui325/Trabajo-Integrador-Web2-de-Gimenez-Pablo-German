@@ -1,4 +1,4 @@
-# APP WEB DE ALMACENAMIENTO
+# PROYECTO “FOTAZA 2 -version 2 actualizada” PROGRAMACIÓN WEB II
 
 Se necesita implementar una aplicación web que permita almacenar, ordenar, buscar, vender y
 compartir fotografías en línea, a través de Internet.
