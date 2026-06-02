@@ -4,8 +4,9 @@
   margin: 0;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
+
 nav {
-  background-color: rgba(112, 255, 55, 0.925);
+  background-color: rgb(69, 168, 3);
   overflow: hidden;
 }
 

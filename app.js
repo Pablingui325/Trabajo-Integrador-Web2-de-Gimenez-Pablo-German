@@ -62,6 +62,19 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
+app.get("/image", (req, res) => {
+  res.render("index");
+});
+
+app.post("/image", (req, res) => {
+  const imgSubida = req.body.imagenFotaza;
+  res.render("view", {
+    imagen: {
+      src: imgSubida,
+    },
+  });
+});
+
 app.listen(PORT, (err) => {
   if (err) {
     console.error("Error al iniciar el servidor:", err);

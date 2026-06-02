@@ -1,0 +1,9 @@
+extends ./layout.pug
+
+block metadata 
+  title Documento
+
+block content 
+  h1 Imagen resultante 
+  if Imagen 
+    image(src=imagen.src)

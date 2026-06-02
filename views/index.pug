@@ -1,0 +1,41 @@
+extends ./layout.pug 
+
+block metadata 
+  title Documento
+
+block content 
+  form(action="/image" method="POST") 
+    div 
+      label(for="image") 
+      input(type="file" name="image" id="image")
+    div
+      textarea(name="TPI_Fotaza_2_version_2_actualizada" id="TPI_Fotaza_2_version_2_actualizada" value="Imagen cargada") 
+    input(type="submit", value="Subir")
+  
+  script. 
+    const fileInput =
+      document.getElementById('image');
+    
+    const imagenFotaza = 
+      document.getElementById('TPI_Fotaza_2_version_2_actualizada');
+
+    fileInput.addEventListener('change', (e) => {
+
+      const file = e.target.files[0];
+      console.log(file);
+      console.log(fileInput, imagenFotaza);
+      
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = () => {
+
+        imagenFotaza.value =
+          reader.result;
+
+      };
+
+      reader.readAsDataURL(file);
+
+    })
