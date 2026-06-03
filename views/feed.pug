@@ -1,0 +1,39 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Inicio
+
+block content
+  h1 Fotos de la comunidad
+  p Aquí verás las últimas publicaciones de las personas que seguís.
+  
+  if feedItems.length > 0
+    .row.justify-content-center
+      each item in feedItems
+        .col-md-8.mb-4
+          .card
+            // Encabezado de la publicación (Autor)
+            .card-header
+              img(src=item.author.avatarUrl || '/images/default-avatar.png', alt=item.author.username, style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;")
+              a(href=`/profile/${item.author.username}`) #{item.author.firstName} #{item.author.lastName}
+            
+            // Imagen compartida
+            a(href=`/photo/${item.id}`)
+              img.img-fluid.w-100(src=item.url, alt=item.title, style="max-height: 500px; object-fit: cover;")
+            
+            // Datos y acciones de la foto
+            .card-body
+              h3 #{item.title}
+              p #{item.description}
+              
+              .d-flex.justify-content-between.align-items-center
+                div
+                  button.btn.btn-light.btn-sm ❤️ #{item.likesCount || 0}
+                  button.btn.btn-light.btn-sm 💬 #{item.commentsCount || 0}
+                if item.isForSale
+                  span.badge.bg-success En venta por: $#{item.price}
+  else
+    .text-center.my-5
+      h3 ¡Te damos la bienvenida a Fotaza!
+      p Todavía no hay fotos en tu inicio porque no seguís a nadie o tus amigos no han subido contenido.
+      a.btn.btn-primary(href='/discover') Descubrir fotógrafos

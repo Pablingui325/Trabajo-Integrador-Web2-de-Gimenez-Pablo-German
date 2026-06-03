@@ -1,0 +1,46 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Editar Perfil
+
+block content
+  h1 Actualizar los datos de tu perfil.
+  form(action="/profile/edit" method="POST")
+    input(type="hidden" name="_csrf" value=csrfToken)
+    
+    .form-group
+      label(for="firstName") Nombre:
+      input#firstName.form-control(type="text" name="firstName" value=user.firstName required)
+    
+    .form-group 
+      label(for="lastName") Apellido: 
+      input#lastName.form-control(type="text" name="lastName" value=user.lastName required)
+      
+    .form-group
+      label(for="bio") Biografía o Descripción:
+      textarea#bio.form-control(name="bio" rows="3") #{user.bio}
+
+    .form-group
+      label(for="avatarUrl") URL de foto de perfil (Opcional):
+      input#avatarUrl.form-control(type="url" name="avatarUrl" value=user.avatarUrl)
+
+    .form-group 
+      label(for="phone") Número de teléfono: 
+      input#phone.form-control(type="tel" name="phone" value=user.phone required)
+
+    br
+    h3 Cambiar contraseña (Opcional)
+    .form-group
+      label(for="currentPassword") Contraseña actual:
+      input#currentPassword.form-control(type="password" name="currentPassword")
+    .form-group
+      label(for="newPassword") Nueva contraseña:
+      input#newPassword.form-control(type="password" name="newPassword")
+    
+    br
+    button.btn.btn-success(type="submit") Guardar Cambios
+    br
+  
+  h2 ¿No querés hacer cambios? 
+    a(href=`/profile`) Volver al perfil
+
