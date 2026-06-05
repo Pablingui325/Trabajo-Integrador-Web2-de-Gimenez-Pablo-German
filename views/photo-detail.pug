@@ -1,0 +1,64 @@
+extends ./layout.pug 
+
+block metadata 
+  title Fotaza - #{photo.title}
+
+block content 
+  .row 
+    .col-md-8.mb-4 
+      .card 
+        img.img-fluid.w-100(src=photo.url, alt=photo.title, style="max-height: 600px; object-fit: contain; background-color: #f8f9fa;")
+
+    .col-md-4 
+      header.photo-author.mb-3 
+        img(src=photo.author.avatarUrl || "/images/default-avatar.png", alt=photo.author.username, style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;")
+        span for 
+        a(href=`/profile/${photo.author.username}`) #{photo.author.firstName} #{photo.author.lastName}
+      
+      h1 #{photo.title}
+      p.text-muted Publicando #{photo.createdAt || 'recientemente'}
+      p #{photo.description || 'Sin descripcion.'}
+
+      if photo.tags && photo.tags.lenght > 0
+        p 
+          each tag in photo.tags 
+            span.bedge.bg-secondary.me-1 ##{tag}
+        
+        hr
+
+        .d-flex.gap-2.mb-4
+          button.btn.btn-light ❤️ #{photo.likesCount || 0} Me gusta
+          button.btn.btn-light 🔗 Compartir
+          a.btn.btn-warning(href=`/report?photoId=${photo.id}`) ⚠️ Reportar
+
+        if photo.isForSale
+        .card.border-success.mb-4
+          .card-body
+            h4.card-title.text-success Precio: $#{photo.price}
+            p.card-text.small Licencia comercial de uso digital incluida.
+            form(action="/cart/add" method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              input(type="hidden" name="photoId" value=photo.id)
+              button.btn.btn-success.w-100(type="submit") Añadir al carrito
+
+        hr
+
+        h3 Comentarios
+      
+        if comments && comments.length > 0
+          ul.list-unstyled.mb-4(style="max-height: 250px; overflow-y: auto;")
+            each comment in comments
+              li.mb-2.border-bottom.pb-2
+                strong
+                  a(href=`/profile/${comment.author.username}`).text-decoration-none #{comment.author.username}
+                p.mb-0.small #{comment.text}
+        else
+          p.text-muted.small No hay comentarios en esta foto. ¡Sé el primero!
+
+        form(action=`/photo/${photo.id}/comment` method="POST")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          .form-group.mb-2
+            textarea.form-control(name="commentText" rows="2" placeholder="Escribí un comentario respetuoso..." required)
+          button.btn.btn-primary.btn-sm(type="submit") Comentar
+
+     

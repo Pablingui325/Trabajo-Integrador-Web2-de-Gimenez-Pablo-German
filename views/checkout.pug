@@ -1,0 +1,47 @@
+extends ./layout.pug 
+
+block metadata 
+  title Fotaza - Finalizar Compra
+
+block content 
+  h1 Finalizar Compra
+  p Completá los datos requeridos para procesar tu pago seguro.
+  
+  .row
+    .col-md-7.mb-4
+      form(action="/checkout" method="POST")
+        input(type="hidden" name="_csrf" value=csrfToken)
+        
+        h3 Datos de Facturación
+        .form-group.mb-3
+          label(for="cardName") Nombre del titular de la tarjeta:
+          input#cardName.form-control(type="text" name="cardName" required)
+          
+        .form-group.mb-3
+          label(for="cardNumber") Número de tarjeta:
+          input#cardNumber.form-control(type="text" name="cardNumber" placeholder="xxxx xxxx xxxx xxxx" required)
+          
+        .row
+          .col-md-6.form-group.mb-3
+            label(for="cardExpiry") Fecha de vencimiento:
+            input#cardExpiry.form-control(type="text" name="cardExpiry" placeholder="MM/AA" required)
+          .col-md-6.form-group.mb-3
+            label(for="cardCvc") Código CVC:
+            input#cardCvc.form-control(type="text" name="cardCvc" placeholder="123" required)
+            
+        br
+        button.btn.btn-success.btn-lg.w-100(type="submit") Pagar $#{cartTotal}
+        
+    .col-md-5
+      .card.bg-light
+        .card-body
+          h4 Estás comprando:
+          ul.list-unstyled.mt-3
+            each item in cartItems
+              li.d-flex.justify-content-between.mb-2.border-bottom.pb-2
+                span #{item.title} (x1)
+                strong $#{item.price}
+          
+          .d-flex.justify-content-between.mt-3
+            span.h5 Total a abonar:
+            strong.h5.text-success $#{cartTotal}

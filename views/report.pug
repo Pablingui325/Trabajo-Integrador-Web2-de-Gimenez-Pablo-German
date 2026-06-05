@@ -1,0 +1,39 @@
+extends ./layout.pug 
+
+block metadata 
+  title Fotaza - Reportar Contenido
+
+block content 
+  .container.my-4(style="max-width: 600px;")
+    h1 Reportar Publicación Inapropiada
+    p Tu reporte ayuda a mantener una comunidad fotográfica limpia, segura y regulada bajo nuestras condiciones de uso.
+
+    form(action="/report" method="POST")
+      input(type="hidden" name="_csrf" value=csrfToken)
+      
+      input(type="hidden" name="photoId" value=photoId)
+
+      .form-group.mb-3
+        label(for="reason") Motivo del reporte:
+        select#reason.form-control(name="reason" required)
+          option(value="") -- Seleccioná una opción --
+          option(value="derechos_autor") Infracción de Derechos de Autor (Plagio)
+          option(value="contenido_inapropiado") Contenido violento o explícito
+          option(value="acoso_odio") Acoso, odio o discriminación
+          option(value="spam") Spam o publicidad engañosa
+          option(value="otro") Otro motivo (Especificar abajo)
+
+      .form-group.mb-3
+        label(for="details") Detalles adicionales (Opcional):
+        textarea#details.form-control(name="details" rows="4" placeholder="Brindanos más información sobre por qué esta publicación o comentario infringe las normas...")
+
+      .form-check.mb-3
+        input#confirmReport.form-check-input(type="checkbox" required)
+        label.form-check-label(for="confirmReport") Confirmo que este reporte se realiza de buena fe conforme a las reglas del sitio.
+
+      br
+      button.btn.btn-danger(type="submit") Enviar Reporte Comunitario
+      br
+      
+    h2.mt-4 ¿Cambiaste de opinión? 
+      a(href="/") Cancelar y volver al inicio

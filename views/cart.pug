@@ -1,0 +1,48 @@
+extends ./layout.pug 
+
+block metadata 
+  title Fotaza - Mi carrito de compras 
+
+block content 
+  h1 Tu Carrito de Compras
+  
+  if cartItems && cartItems.length > 0
+    .row
+      .col-md-8
+        ul.list-group.mb-3
+          each item in cartItems
+            li.list-group-item.d-flex.justify-content-between.align-items-center
+              .d-flex.align-items-center
+                img(src=item.url, alt=item.title, style="width: 80px; height: 60px; object-fit: cover; margin-right: 15px; border-radius: 4px;")
+                <div>
+                  <h5 class="mb-0">#{item.title}</h5>
+                  <small class="text-muted">De: @#{item.author.username}</small>
+                </div>
+              
+              .d-flex.align-items-center.gap-3
+                span.fw-bold.text-success $#{item.price}
+                form(action="/cart/remove" method="POST")
+                  input(type="hidden" name="_csrf" value=csrfToken)
+                  input(type="hidden" name="photoId" value=item.id)
+                  button.btn.btn-danger.btn-sm(type="submit") Quitar
+                  
+      .col-md-4
+        .card
+          .card-body
+            h4.card-title Resumen del Pedido
+            hr
+            .d-flex.justify-content-between.mb-3
+              span Total del carrito:
+              strong.text-success.h4 $#{cartTotal}
+            
+            p.text-muted.small Al finalizar la compra, las descargas en alta resolución se habilitarán inmediatamente en tu perfil.
+            
+            a.btn.btn-success.w-100(href="/checkout") Proceder al Pago
+            br
+            br
+            a.btn.btn-light.btn-sm.w-100(href="/shop") Seguir comprando
+  else
+    .text-center.my-5
+      <h2>Tu carrito está vacío</h2>
+      p.text-muted Todavía no agregaste ninguna fotografía para comprar.
+      a.btn.btn-primary(href="/shop") Explorar la tienda
