@@ -14,8 +14,8 @@ block content
           .card
             // Encabezado de la publicación (Autor)
             .card-header
-              img(src=item.author.avatarUrl || '/images/default-avatar.png', alt=item.author.username, style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;")
-              a(href=`/profile/${item.author.username}`) #{item.author.firstName} #{item.author.lastName}
+              img(src=item.author.avatarUrl || '/images/default-avatar.png', alt=item.author.userName, style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;")
+              a(href=`/profile/${item.author.userName}`) #{item.author.firstName} #{item.author.lastName}
             
             // Imagen compartida
             a(href=`/photo/${item.id}`)

@@ -11,9 +11,9 @@ block content
 
     .col-md-4 
       header.photo-author.mb-3 
-        img(src=photo.author.avatarUrl || "/images/default-avatar.png", alt=photo.author.username, style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;")
+        img(src=photo.author.avatarUrl || "/images/default-avatar.png", alt=photo.author.userName, style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;")
         span for 
-        a(href=`/profile/${photo.author.username}`) #{photo.author.firstName} #{photo.author.lastName}
+        a(href=`/profile/${photo.author.userName}`) #{photo.author.firstName} #{photo.author.lastName}
       
       h1 #{photo.title}
       p.text-muted Publicando #{photo.createdAt || 'recientemente'}
@@ -50,7 +50,7 @@ block content
             each comment in comments
               li.mb-2.border-bottom.pb-2
                 strong
-                  a(href=`/profile/${comment.author.username}`).text-decoration-none #{comment.author.username}
+                  a(href=`/profile/${comment.author.userName}`).text-decoration-none #{comment.author.userName}
                 p.mb-0.small #{comment.text}
         else
           p.text-muted.small No hay comentarios en esta foto. ¡Sé el primero!

@@ -1,13 +1,13 @@
 extends ./layout.pug
 
 block metadata
-  title Fotaza - Perfil de #{user.username}
+  title Fotaza - Perfil de #{user.userName}
 
 block content
   // Cabecera del Perfil
   header.profile-header
-    img(src=user.avatarUrl || '/images/default-avatar.png', alt=user.username, style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;")
-    h1 #{user.firstName} #{user.lastName} (@#{user.username})
+    img(src=user.avatarUrl || '/images/default-avatar.png', alt=user.userName, style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;")
+    h1 #{user.firstName} #{user.lastName} (@#{user.userName})
     p #{user.bio || 'Sin biografía aún.'}
     
     // Estadísticas

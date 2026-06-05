@@ -2,64 +2,60 @@ import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { doubleCsrf } from "csrf-csrf";
+
+import authRutes from "./routes/auth.js";
+import profilesRutes from "./routes/profile.js";
+import photoRutes from "./routes/photos.js";
+import shopRutes from "./routes/shop.js";
+
 const app = express();
 const PORT = process.env.PORT;
-
-app.use(express.static("public"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const COOKIE_SECRET = "un_secreto_muy_largo_y_seguro_123456";
-app.use(cookieParser(COOKIE_SECRET));
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
 
 app.set("view engine", "pug");
 app.set("views", "./views");
 
-const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
+app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(COOKIE_SECRET));
+
+export const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
   getSecret: () => COOKIE_SECRET,
   cookieName: "x-csrf-token",
   cookieOptions: {
     httpOnly: true,
     sameSite: "lax",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
   },
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
   getTokenFromRequest: (req) => req.body._csrf,
-  getSessionIdentifier: (req) =>
-    req.cookies[COOKIE_SECRET] || "usuario-anonimo",
+  getSessionIdentifier: (req) => "fotaza-session-id",
 });
 
-app.get("/", (req, res, next) => {
-  const token = generateCsrfToken(req, res);
-  res.locals.csrfToken = token;
+app.use((req, res, next) => {
+  res.locals.csrfToken = generateCsrfToken(req, res);
+  next();
+});
+
+app.get("/", (req, res) => {
   res.redirect("/login");
 });
 
-app.get("/login", (req, res) => {
-  res.render("inicioSesion");
-});
-
-app.get("/signup", (req, res) => {
-  res.render("crearUsuario");
-});
-
-app.post("/signup", doubleCsrfProtection, (req, res) => {
-  const { firstName, lastName, password, confirmPassword } = req.body;
-  if (password !== confirmPassword) {
-    return res.status(400).send("Las contraseñas no coinciden");
-  }
-  res.send(
-    `Usuario ${fistName} ${lastName} creado de manera segura. ¡El token CSRF funcionó!`,
-  );
-});
+app.use("/", authRutes);
+app.use("/", profilesRutes);
+app.use("/", photoRutes);
+app.use("/", shopRutes);
 
 app.use((error, req, res, next) => {
   if (error.code === "EBADCSRFTOKEN") {
-    return res
-      .status(403)
-      .send("Error de seguridad: Sesión inválida o formulario caducado.");
+    return res.status(403).render("inicioSesion", {
+      error: "Error de seguridad: Formulario vencido. Intentalo de nuevo.",
+    });
   }
-  next(error);
+  console.error(error);
+  res.status(500).send("Ocurrio un error interno en el servidor.");
 });
 
 app.listen(PORT, (err) => {
