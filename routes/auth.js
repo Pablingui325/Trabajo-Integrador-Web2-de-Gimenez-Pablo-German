@@ -13,20 +13,18 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", doubleCsrfProtection, (req, res) => {
-  const { userName, password } = req.body;
-
-  if (!userName || !password) {
+  const { email, password } = req.body;
+  if (!email || !password) {
     return res.status(400).render("inicioSesion", {
       error: "Por favor, completa todos los campos obligatorios.",
     });
   }
-
-  if (userName === "admin" && password === "123456") {
+  if (email === "admin" && password === "123456") {
     return res.redirect("/feed");
   }
 
   res.status(401).render("inicioSesion", {
-    error: "Credenciales incorrectas. Verificá tu usuario y contraseña.",
+    error: "Credenciales incorrectas. Verificá tu correo y contraseña.",
   });
 });
 
@@ -37,15 +35,7 @@ router.get("/signup", (req, res) => {
 });
 
 router.post("/signup", doubleCsrfProtection, (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    userName,
-    password,
-    confirmPassword,
-    terms,
-  } = req.body;
+  const { email, userName, password, confirmPassword, terms } = req.body;
 
   if (!terms) {
     return res.status(400).render("crearUsuario", {
@@ -68,8 +58,6 @@ router.post("/signup", doubleCsrfProtection, (req, res) => {
 
   const newUser = {
     id: Date.now(),
-    firstName,
-    lastName,
     email,
     userName,
     createdAt: new Date(),

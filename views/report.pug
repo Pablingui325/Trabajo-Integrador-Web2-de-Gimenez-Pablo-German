@@ -7,33 +7,37 @@ block content
   .container.my-4(style="max-width: 600px;")
     h1 Reportar Publicación Inapropiada
     p Tu reporte ayuda a mantener una comunidad fotográfica limpia, segura y regulada bajo nuestras condiciones de uso.
+    
+    .alert.alert-warning.small
+      strong Importante: 
+      | Cuando una imagen acumula más de 3 denuncias de diferentes usuarios, la publicación se congelará y será enviada a la lista de revisión del validador de contenidos.
 
     form(action="/report" method="POST")
       input(type="hidden" name="_csrf" value=csrfToken)
-      
       input(type="hidden" name="photoId" value=photoId)
 
       .form-group.mb-3
-        label(for="reason") Motivo del reporte:
+        label.form-label.fw-bold(for="reason") Motivo del reporte:
         select#reason.form-control(name="reason" required)
-          option(value="") -- Seleccioná una opción --
+          option(value="") -- Seleccioná una opción obligatoria --
           option(value="derechos_autor") Infracción de Derechos de Autor (Plagio)
           option(value="contenido_inapropiado") Contenido violento o explícito
           option(value="acoso_odio") Acoso, odio o discriminación
           option(value="spam") Spam o publicidad engañosa
-          option(value="otro") Otro motivo (Especificar abajo)
+          option(value="otro") Otro motivo (Especificar en la justificación)
 
       .form-group.mb-3
-        label(for="details") Detalles adicionales (Opcional):
-        textarea#details.form-control(name="details" rows="4" placeholder="Brindanos más información sobre por qué esta publicación o comentario infringe las normas...")
+        label.form-label.fw-bold(for="details") Justificación de la denuncia:
+        textarea#details.form-control(name="details" rows="4" placeholder="Debe describir de forma clara el motivo por el cual la imagen infringe las normas..." required)
 
-      .form-check.mb-3
+      .form-check.mb-4
         input#confirmReport.form-check-input(type="checkbox" required)
-        label.form-check-label(for="confirmReport") Confirmo que este reporte se realiza de buena fe conforme a las reglas del sitio.
+        label.form-check-label.text-muted.small(for="confirmReport") Confirmo que este reporte se realiza de buena fe conforme a las reglas de comportamiento de la comunidad.
 
-      br
-      button.btn.btn-danger(type="submit") Enviar Reporte Comunitario
-      br
+      button.btn.btn-danger.w-100(type="submit") Enviar Reporte Comunitario
       
-    h2.mt-4 ¿Cambiaste de opinión? 
-      a(href="/") Cancelar y volver al inicio
+    .text-center.mt-4
+      p ¿Cambiaste de opinión? 
+        a(href=`/photo/${photoId}`).text-decoration-none Cancelar y regresar a la fotografía
+
+

@@ -1,0 +1,68 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Comunidad Fotográfica en Línea
+
+block content
+  header.hero-section.text-center.my-5.p-4.bg-light.border.rounded
+    h1.display-4 ¡Bienvenido a Fotaza!
+    p.lead El espacio ideal para almacenar, buscar, vender y compartir tus fotografías de forma segura.
+    if !user
+      .mt-3.gap-2.d-flex.justify-content-center
+        a.btn.btn-primary(href="/login") Iniciar Sesión
+        a.btn.btn-outline-success(href="/signup") Unirse a la Comunidad
+
+  section.featured-photos.mb-5
+    .d-flex.justify-content-between.align-items-center.mb-3
+      h2.h3 🔥 Fotografías Destacadas
+      span.badge.bg-fire.text-dark.border Lo más valorado de la comunidad
+    
+    if featuredPhotos && featuredPhotos.length > 0
+      .row
+        each photo in featuredPhotos
+          .col-md-4.mb-4
+            .card.h-100.shadow-sm
+              .position-relative
+                a(href=`/photo/${photo.id}`)
+                  img.card-img-top(src=photo.url, alt=photo.title, style="height: 250px; object-fit: cover;")
+                if photo.hasWatermark
+                  .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.3; color: white; font-size: 1.5rem; font-weight: bold; text-shadow: 1px 1px 3px #000; transform: rotate(-30deg); width: 80%; text-center: center;") #{photo.watermarkText || '© Copyright'}
+              
+              .card-body.d-flex.flex-column.justify-content-between
+                div
+                  h3.h6.card-title.mb-1 #{photo.title}
+                  p.text-muted.small.mb-2 Por @#{photo.author.userName}
+                .d-flex.justify-content-between.align-items-center
+                  span.text-warning.fw-bold ⭐ #{photo.ratingAverage} 
+                    span.text-muted.small.fw-normal (#{photo.ratingCount} votos)
+                  if photo.isForSale
+                    span.badge.bg-success $#{photo.price}
+    else
+      p.text-muted Todavía no hay fotos destacadas que cumplan con los criterios mínimos de votación.
+
+  hr.my-5
+
+  section.discover-photos
+    .d-flex.justify-content-between.align-items-center.mb-3
+      h2.h3 🎨 Descubrir Contenido Nuevo
+      p.text-muted.small.mb-0 Una oportunidad para explorar el talento emergente
+
+    if randomPhotos && randomPhotos.length > 0
+      .row
+        each photo in randomPhotos
+          .col-md-3.mb-4
+            .card.h-100.border-0.shadow-sm
+              .position-relative
+                a(href=`/photo/${photo.id}`)
+                  img.card-img-top.rounded(src=photo.url, alt=photo.title, style="height: 200px; object-fit: cover;")
+                if photo.hasWatermark
+                  .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.3; color: white; font-size: 1.2rem; font-weight: bold; text-shadow: 1px 1px 3px #000; transform: rotate(-30deg);") #{photo.watermarkText}
+              
+              .card-body.p-2
+                h4.h6.mb-0.text-truncate #{photo.title}
+                .d-flex.justify-content-between.align-items-center.mt-1
+                  small.text-muted @#{photo.author.userName}
+                  if !photo.hasWatermark
+                    span.badge.bg-light.text-dark.small.border Libre de derechos
+    else
+      p.text-muted No hay fotos nuevas disponibles para mostrar en este momento.

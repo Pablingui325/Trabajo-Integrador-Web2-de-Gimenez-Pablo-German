@@ -1,39 +1,47 @@
 extends ./layout.pug
 
 block metadata
-  title Fotaza - Inicio
+  title Fotaza - Publicaciones de usuarios que sigo
 
 block content
-  h1 Fotos de la comunidad
-  p Aquí verás las últimas publicaciones de las personas que seguís.
+  h1 Publicaciones de usuarios que sigo
+  p.text-muted Aquí verás las últimas fotos capturadas por los fotógrafos que decidiste seguir.
   
-  if feedItems.length > 0
+  if feedItems && feedItems.length > 0
     .row.justify-content-center
       each item in feedItems
         .col-md-8.mb-4
           .card
-            // Encabezado de la publicación (Autor)
-            .card-header
-              img(src=item.author.avatarUrl || '/images/default-avatar.png', alt=item.author.userName, style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;")
-              a(href=`/profile/${item.author.userName}`) #{item.author.firstName} #{item.author.lastName}
+            .card-header.d-flex.align-items-center.justify-content-between
+              .d-flex.align-items-center
+                img(src=item.author.avatarUrl || '/images/default-avatar.png', alt=item.author.userName, style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; object-fit: cover;")
+                a(href=`/profile/${item.author.userName}`).fw-bold.text-decoration-none @#{item.author.userName}
+              span.text-muted.small #{item.createdAt || 'Reciente'}
             
-            // Imagen compartida
-            a(href=`/photo/${item.id}`)
-              img.img-fluid.w-100(src=item.url, alt=item.title, style="max-height: 500px; object-fit: cover;")
+            .position-relative
+              a(href=`/photo/${item.id}`)
+                img.img-fluid.w-100(src=item.url, alt=item.title, style="max-height: 500px; object-fit: cover;")
+              if item.hasWatermark
+                .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.4; color: white; font-size: 2rem; font-weight: bold; text-shadow: 2px 2px 4px #000; transform: rotate(-30deg);") #{item.watermarkText || 'Fotaza App'}
             
-            // Datos y acciones de la foto
             .card-body
-              h3 #{item.title}
-              p #{item.description}
+              h3.h5 #{item.title}
+              p.card-text #{item.description || 'Sin descripción.'}
               
-              .d-flex.justify-content-between.align-items-center
-                div
-                  button.btn.btn-light.btn-sm ❤️ #{item.likesCount || 0}
-                  button.btn.btn-light.btn-sm 💬 #{item.commentsCount || 0}
+              if item.tags && item.tags.length > 0
+                .mb-3
+                  each tag in item.tags
+                    span.badge.bg-secondary.me-1 ##{tag}
+              
+              .d-flex.justify-content-between.align-items-center.border-top.pt-3
+                .d-flex.gap-2
+                  span.text-muted.small ⭐ #{item.ratingAverage || 0} (#{item.ratingCount || 0} votos)
+                  span.text-muted.small 💬 #{item.commentsCount || 0} comentarios
                 if item.isForSale
-                  span.badge.bg-success En venta por: $#{item.price}
+                  span.badge.bg-success En venta: $#{item.price}
   else
     .text-center.my-5
-      h3 ¡Te damos la bienvenida a Fotaza!
-      p Todavía no hay fotos en tu inicio porque no seguís a nadie o tus amigos no han subido contenido.
+      h3 Tu feed está vacío
+      p Todavía no hay fotos en tu inicio porque no seguís a nadie o los usuarios que seguís no han subido contenido reciente.
       a.btn.btn-primary(href='/discover') Descubrir fotógrafos
+

@@ -19,29 +19,30 @@ block content
       p.text-muted Publicando #{photo.createdAt || 'recientemente'}
       p #{photo.description || 'Sin descripcion.'}
 
-      if photo.tags && photo.tags.lenght > 0
+      if photo.tags && photo.tags.length > 0
         p 
           each tag in photo.tags 
-            span.bedge.bg-secondary.me-1 ##{tag}
+            span.badge.bg-secondary.me-1 ##{tag}
         
-        hr
+      hr
 
-        .d-flex.gap-2.mb-4
-          button.btn.btn-light ❤️ #{photo.likesCount || 0} Me gusta
-          button.btn.btn-light 🔗 Compartir
-          a.btn.btn-warning(href=`/report?photoId=${photo.id}`) ⚠️ Reportar
+      .d-flex.gap-2.mb-4
+        button.btn.btn-light ❤️ #{photo.likesCount || 0} Me gusta
+        button.btn.btn-light 🔗 Compartir
+        a.btn.btn-warning(href=`/report?photoId=${photo.id}`) ⚠️ Reportar
 
-        if photo.isForSale
+      if photo.isForSale
         .card.border-success.mb-4
           .card-body
             h4.card-title.text-success Precio: $#{photo.price}
             p.card-text.small Licencia comercial de uso digital incluida.
-            form(action="/cart/add" method="POST")
+            form(action="/interest" method="POST")
               input(type="hidden" name="_csrf" value=csrfToken)
               input(type="hidden" name="photoId" value=photo.id)
-              button.btn.btn-success.w-100(type="submit") Añadir al carrito
+              button.btn.btn-success.w-100(type="submit") 📩 Me interesa comprar
 
-        hr
+
+       hr
 
         h3 Comentarios
       

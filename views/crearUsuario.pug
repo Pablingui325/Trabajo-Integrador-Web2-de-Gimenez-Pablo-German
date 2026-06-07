@@ -8,11 +8,11 @@ block content
   form(action="/signup" method="POST")
     input(type="hidden" name="_csrf" value=csrfToken)
     .form-group
-      label(for="firstName")  Ingrese su nombre:
-      input#firstName.form-control(type="text" name="firstName" required)
-    .form-group 
-      label(for="lastName") Ingrese su apellido: 
-      input#lastNme.form-control(type="text" name="lastName" required)
+      label(for="email") Ingresa tu Correo Electrónico:
+      input#email.form-control(type="email" name="email" required)
+    .form-group
+      label(for="userName") Ingresa tu nombre y apellido:
+      input#userName.form-control(type="text" name="userName" required)
     .form-group
       label(for="birthDay") Ingrese su fecha de nacimiento: 
       input#birthDay.form-control(type="date" name="birthDay" required)
@@ -31,6 +31,9 @@ block content
     .form-group
       label(for="confirmPassword") Confirme su contraseña: 
       input#confirmPassword.form-control(type="password" name="confirmPassword" required)
+    .form-check.mb-3
+      input#terms.form-check-input(type="checkbox" name="terms" required)
+      label.form-check-label(for="terms") Acepto las normas de comportamiento de Fotaza
     br
     button.btn.btn-success(type="submit") Registrarse
     br

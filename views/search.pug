@@ -1,0 +1,78 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Motor de Búsqueda Flexible
+
+block content
+  h1.mb-2 🔍 Motor de Búsqueda de Contenidos
+  p.text-muted Encontrá las mejores imágenes utilizando múltiples filtros combinados.
+
+  .card.bg-light.mb-4.shadow-sm
+    .card-body
+      form(action="/search" method="GET")
+        .row.g-3
+          .col-md-4
+            label.form-label.fw-bold(for="keyword") Término de búsqueda:
+            input#keyword.form-control(type="text" name="keyword" value=filters.keyword placeholder="Ej: Atardecer, montaña, playa...")
+          
+          .col-md-4
+            label.form-label.fw-bold(for="tag") Buscar por Etiqueta (Tag):
+            input#tag.form-control(type="text" name="tag" value=filters.tag placeholder="Ej: naturaleza (sin #)")
+          
+          .col-md-4
+            label.form-label.fw-bold(for="license") Tipo de Licencia:
+            select#license.form-control(name="license")
+              option(value="") -- Todas las licencias --
+              option(value="copyright" selected=filters.license==='copyright') Protegido con Copyright
+              option(value="no_copyright" selected=filters.license==='no_copyright') Libre (Sin Copyright / Público)
+
+        .row.g-3.mt-2
+          .col-md-4
+            label.form-label.fw-bold(for="status") Estado Comercial:
+            select#status.form-control(name="status")
+              option(value="") -- Todos --
+              option(value="for_sale" selected=filters.status==='for_sale') Solo fotografías en venta
+              option(value="not_for_sale" selected=filters.status==='not_for_sale') Solo exhibición
+
+          .col-md-4
+            label.form-label.fw-bold(for="sortBy") Ordenar resultados por:
+            select#sortBy.form-control(name="sortBy")
+              option(value="recent" selected=filters.sortBy==='recent') Más recientes primero
+              option(value="rating" selected=filters.sortBy==='rating') Mejor valoradas (Estrellas)
+              option(value="popular" selected=filters.sortBy==='popular') Más comentadas
+
+          .col-md-4.d-flex.align-items-end.gap-2
+            button.btn.btn-primary.w-100(type="submit") Aplicar Filtros
+            a.btn.btn-outline-secondary.w-100(href="/search") Limpiar Filtros
+
+  hr.my-4
+
+  h2.h4.mb-3 Resultados de la búsqueda (#{results.length})
+  
+  if results && results.length > 0
+    .row
+      each photo in results
+        .col-md-3.mb-4
+          .card.h-100.shadow-sm
+            .position-relative
+              a(href=`/photo/${photo.id}`)
+                img.card-img-top(src=photo.url, alt=photo.title, style="height: 180px; object-fit: cover;")
+              
+              if photo.hasCopyright
+                span.badge.bg-dark.position-absolute.top-0.start-0.m-2 © CR
+              else
+                span.badge.bg-light.text-dark.position-absolute.top-0.start-0.m-2 CC0 Public
+
+            .card-body.p-2.d-flex.flex-column.justify-content-between
+              div
+                h3.h6.card-title.text-truncate.mb-1 #{photo.title}
+                p.text-muted.small.mb-2 Por @#{photo.author.userName}
+              
+              .d-flex.justify-content-between.align-items-center.mt-2.border-top.pt-2
+                span.text-warning.small ⭐ #{photo.ratingAverage || 0}
+                if photo.isForSale
+                  span.badge.bg-success.small $#{photo.price}
+  else
+    .text-center.my-5
+      h3 No se encontraron fotografías
+      p.text-muted Intenta cambiando los criterios de los filtros o escribiendo otra palabra clave.
