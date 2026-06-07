@@ -1,0 +1,57 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Mis Colecciones y Favoritos
+
+block content
+  h1 📁 Mis Colecciones Personales
+  p.text-muted Organizá tus publicaciones favoritas. Esta sección es estrictamente privada y solo vos podés verla.
+
+  // Formulario para Crear una Nueva Colección (Req 6)
+  .card.bg-light.mb-4
+    .card-body
+      h2.h5 Crear nueva colección
+      form(action="/collections/create" method="POST" class="row g-3 align-items-end")
+        input(type="hidden" name="_csrf" value=csrfToken)
+        .col-md-8
+          label.form-label(for="collectionName") Nombre de la colección:
+          input#collectionName.form-control(type="text" name="name" placeholder="Ej: Paisajes, Ideas, Inspiración" required)
+        .col-md-4
+          button.btn.btn-success.w-100(type="submit") ➕ Crear Carpeta
+
+  // Listado de Colecciones Existentes
+  if collections && collections.length > 0
+    .row
+      each collection in collections
+        .col-md-6.mb-4
+          .card.h-100.shadow-sm
+            .card-header.bg-dark.text-white.d-flex.justify-content-between
+              h3.h6.mb-0 📂 #{collection.name}
+              span.badge.bg-secondary #{collection.photos.length} elementos
+            .card-body
+              if collection.photos.length > 0
+                .row.g-2
+                  each photo in collection.photos
+                    .col-4
+                      a(href=`/photo/${photo.id}`)
+                        img.img-fluid.rounded(src=photo.url, alt=photo.title, style="height: 80px; width: 100%; object-fit: cover;")
+              else
+                p.text-muted.small.mb-0 Esta colección está vacía. Añadí fotos desde el detalle de cualquier publicación.
+  else
+    p.text-muted No has creado ninguna colección todavía.
+
+  hr.my-4
+
+  // Sección fija de Favoritos Generales
+  h2.h4.mb-3 ⭐ Mis Favoritos Generales
+  if favorites && favorites.length > 0
+    .row
+      each fav in favorites
+        .col-md-3.mb-3
+          .card
+            a(href=`/photo/${fav.id}`)
+              img.card-img-top(src=fav.url, alt=fav.title, style="height: 150px; object-fit: cover;")
+            .card-body.p-2.text-center
+              h4.h6.text-truncate.mb-0 #{fav.title}
+  else
+    p.text-muted No has marcado ninguna foto como favorita todavía.

@@ -4,9 +4,9 @@ import cookieParser from "cookie-parser";
 import { doubleCsrf } from "csrf-csrf";
 
 import authRutes from "./routes/auth.js";
-import profilesRutes from "./routes/profile.js";
 import photoRutes from "./routes/photos.js";
-import shopRutes from "./routes/shop.js";
+import notificationRoutes from "./routes/notifications.js";
+import collectionRoutes from "./routes/collections.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -44,9 +44,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", authRutes);
-app.use("/", profilesRutes);
 app.use("/", photoRutes);
-app.use("/", shopRutes);
+app.use("/", notificationRoutes);
+app.use("/", collectionRoutes);
 
 app.use((error, req, res, next) => {
   if (error.code === "EBADCSRFTOKEN") {

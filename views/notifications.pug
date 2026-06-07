@@ -1,0 +1,49 @@
+extends ./layout.pug
+
+block metadata
+  title Fotaza - Mis Notificaciones
+
+block content
+  .container.my-4(style="max-width: 800px;")
+    h1 🔔 Panel de Notificaciones
+    p.text-muted Enterate de quién interactúa con tu contenido y tu perfil.
+
+    if notifications && notifications.length > 0
+      ul.list-group.shadow-sm
+        each notif in notifications
+          li(class=`list-group-item d-flex justify-content-between align-items-center ${notif.isRead ? 'bg-light' : 'border-start border-primary border-4'}`)
+            div
+              span.fw-bold @#{notif.sender.userName} 
+              
+              // Renderizado condicional según el Tipo de Evento (Req 5)
+              if notif.type === 'comment'
+
+                | comentó tu publicación 
+                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+              else if notif.type === 'rate'
+                | valorizó tu imagen 
+                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+              else if notif.type === 'interest'
+                span.badge.bg-success.me-1 Venta
+
+                | marcó 
+                strong "Me interesa" 
+                | en tu foto 
+                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+                br
+                small.text-success.fw-bold 📩 Se habilitó un canal de mensajería en su perfil.
+              else if notif.type === 'follow'
+
+                | comenzó a seguirte.
+
+              br
+              small.text-muted #{notif.createdAt || 'Hace un momento'}
+            
+            if !notif.isRead
+              form(action=`/notifications/${notif.id}/read` method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                button.btn.btn-outline-secondary.btn-sm(type="submit") ✅ Marcar como leída
+    else
+      .text-center.my-5
+        h3 No tenés notificaciones nuevas
+        p.text-muted Cuando los usuarios voten, comenten o te sigan, lo verás acá.

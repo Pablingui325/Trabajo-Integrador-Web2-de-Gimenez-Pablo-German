@@ -31,6 +31,37 @@ block content
         button.btn.btn-light 🔗 Compartir
         a.btn.btn-warning(href=`/report?photoId=${photo.id}`) ⚠️ Reportar
 
+      .d-flex.gap-2.mb-3
+        form(action="/favorites/add" method="POST" style="display:inline;")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          input(type="hidden" name="photoId" value=photo.id)
+          button.btn.btn-outline-primary.btn-sm(type="submit") ⭐ Guardar en Favoritos
+
+        form(action="/collections/add-photo" method="POST" style="display:inline;")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          input(type="hidden" name="photoId" value=photo.id)
+            .input-group.input-group-sm
+              select.form-select(name="collectionId" required)
+                option(value="") -- Guardar en Colección --
+                if userCollections
+                  each col in userCollections
+                option(value=col.id) #{col.name}
+              button.btn.btn-primary(type="submit") 📁 Añadir
+
+      if !isAuthor
+        form(action=`/photo/${photo.id}/rate` method="POST" class="mb-4")
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label.form-label.fw-bold Valorar esta fotografía:
+          .d-flex.gap-2
+            select.form-select.form-select-sm(name="rating" style="width: 100px;" required)
+              option(value="1") 1 ★
+              option(value="2") 2 ★
+              option(value="3") 3 ★
+              option(value="4") 4 ★
+              option(value="5") 5 ★
+            button.btn.btn-warning.btn-sm(type="submit") Votar
+
+
       if photo.isForSale
         .card.border-success.mb-4
           .card-body
@@ -40,7 +71,6 @@ block content
               input(type="hidden" name="_csrf" value=csrfToken)
               input(type="hidden" name="photoId" value=photo.id)
               button.btn.btn-success.w-100(type="submit") 📩 Me interesa comprar
-
 
        hr
 

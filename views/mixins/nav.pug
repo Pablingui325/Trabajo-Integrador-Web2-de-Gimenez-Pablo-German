@@ -1,12 +1,31 @@
-mixin nav()
+mixin nav(user)
   nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
     div.container-fluid
-      a.navbar-brand(href="/") Fotaza
+      a.navbar-brand(href="/home") Fotaza
       button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation")
         span.navbar-toggler-icon
       div#navbarNav.collapse.navbar-collapse
+        ul.navbar-nav.me-auto
+          // Enlazar el motor de búsqueda (Requerimiento 3)
+          li.nav-item
+            a.nav-link(href="/search") 🔍 Buscar
+        
         ul.navbar-nav.ms-auto
-          li.nav-item
-            a.nav-link(href="/login") Iniciar Sesión
-          li.nav-item
-            a.nav-link(href="/signup") Crear Usuario
+          if !user
+            li.nav-item
+              a.nav-link(href="/login") Iniciar Sesión
+            li.nav-item
+              a.nav-link(href="/signup") Crear Usuario
+          else
+            // Enlaces exclusivos para usuarios autenticados
+            li.nav-item
+              a.nav-link(href="/feed") 👥 Siguiendo
+            li.nav-item
+              a.nav-link(href="/upload") 📤 Subir Foto
+            li.nav-item
+              a.nav-link(href="/notifications") 🔔 Notificaciones
+            li.nav-item
+              a.nav-link(href="/collections") 📁 Mis Colecciones
+            li.nav-item
+              a.nav-link(href="/logout").text-danger Cerrar Sesión
+
