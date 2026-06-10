@@ -1,5 +1,5 @@
 import express from "express";
-import { doubleCsrfProtection } from "../app.js";
+import { doubleCsrfProtection } from "../configuration/csrfConfig.js";
 
 const router = express.Router();
 

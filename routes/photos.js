@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { doubleCsrfProtection } from "../app.js";
+import { doubleCsrfProtection } from "../configuration/csrfConfig.js";
 
 const router = express.Router();
 
