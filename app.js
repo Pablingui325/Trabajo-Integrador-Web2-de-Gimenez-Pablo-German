@@ -49,7 +49,7 @@ app.use((error, req, res, next) => {
 
 //CONEXION A BD
 sequelize
-  .sync({ alter: true, force: true })
+  .sync({ alter: true })
   .then(() => {
     //SERVIDOR
     app.listen(PORT, (err) => {
