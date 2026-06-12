@@ -5,40 +5,48 @@ block metadata
 
 block content
   // Cabecera del Perfil
-  header.profile-header
-    img(src=user.avatarUrl || '/images/default-avatar.png', alt=user.userName, style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;")
-    h1 #{user.firstName} #{user.lastName} (@#{user.userName})
-    p #{user.bio || 'Sin biografía aún.'}
-    
-    // Estadísticas
-    p
-      strong #{photos.length} 
-
-      | Publicaciones | 
-      strong #{user.followersCount || 0} 
-
-      | Seguidores | 
-      strong #{user.followingCount || 0} 
-      | Siguiendo
-    
-    if isCurrentUser
-      a.btn.btn-primary(href='/profile/edit') Editar Perfil
-    else
-      button.btn.btn-success Seguir
+  header.profile-header.p-4.bg-light.border.rounded.mb-4
+    .d-flex.align-items-center.gap-4
+      img(src=user.avatarUrl || '/images/default-avatar.png', alt=user.userName, style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;")
+      div
+        h1.h2 #{user.firstName} #{user.lastName} 
+          span.text-muted.fs-5 (@#{user.userName})
+        p.mb-2= user.bio || 'Sin biografía aún.'
+        
+        // Estadísticas
+        p.mb-3
+          strong.me-3 #{photos ? photos.length : 0} Publicaciones
+          strong.me-3 #{user.followersCount || 0} Seguidores
+          strong #{user.followingCount || 0} Siguiendo
+        
+        // Acciones condicionales según el usuario
+        if isCurrentUser
+          a.btn.btn-primary.btn-sm(href='/profile/edit') ⚙️ Editar Mi Perfil
+        else
+          .d-flex.gap-2
+            form(action=`/user/follow/${user.id}` method="POST")
+              input(type="hidden" name="_csrf" value=csrfToken)
+              if loSigo
+                button.btn.btn-outline-danger.btn-sm(type="submit") 👤 Dejar de seguir
+              else
+                button.btn.btn-success.btn-sm(type="submit") 👤 Seguir Creador
+            
+            // Botón de Mensajería del Requisito de la Cátedra
+            a.btn.btn-outline-primary.btn-sm(href=`/chat/${user.id}`) ✉️ Enviar Mensaje Privado
 
   hr
   
   // Galería de fotos creadas por el usuario
-  h2 Fotografías compartidas
-  if photos.length > 0
+  h2.h4.mb-3 📷 Fotografías compartidas
+  if photos && photos.length > 0
     .row
       each photo in photos
         .col-md-4.mb-3
-          .card
-            a(href=`/photo/${photo.id}`)
-              img.card-img-top(src=photo.url, alt=photo.title, style="height: 250px; object-fit: cover;")
+          .card.h-100.shadow-sm
+            a(href=`/photo-detail/${photo.id}`)
+              img.card-img-top(src=photo.url, alt=photo.title, style="height: 230px; object-fit: cover;")
             if photo.isForSale
-              .card-body
+              .card-body.p-2.text-center
                 span.badge.bg-success Venta: $#{photo.price}
   else
     p.text-muted Este usuario todavía no ha compartido ninguna fotografía.

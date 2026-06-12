@@ -4,43 +4,46 @@ block metadata
   title Fotaza - Editar Perfil
 
 block content
-  h1 Actualizar los datos de tu perfil.
-  form(action="/profile/edit" method="POST")
-    input(type="hidden" name="_csrf" value=csrfToken)
+  .container.my-4(style="max-width: 600px;")
+    h1 Editar Mi Perfil
+    p.text-muted Actualizá los datos de tu cuenta en la plataforma.
     
-    .form-group
-      label(for="firstName") Nombre:
-      input#firstName.form-control(type="text" name="firstName" value=user.firstName required)
-    
-    .form-group 
-      label(for="lastName") Apellido: 
-      input#lastName.form-control(type="text" name="lastName" value=user.lastName required)
+    form(action="/profile/edit" method="POST" class="shadow-sm p-4 border rounded bg-white")
+      input(type="hidden" name="_csrf" value=csrfToken)
       
-    .form-group
-      label(for="bio") Biografía o Descripción:
-      textarea#bio.form-control(name="bio" rows="3") #{user.bio}
+      .mb-3
+        label.form-label.fw-bold(for="firstName") Nombre:
+        input#firstName.form-control(type="text" name="firstName" value=user.firstName required)
+      
+      .mb-3
+        label.form-label.fw-bold(for="lastName") Apellido:
+        input#lastName.form-control(type="text" name="lastName" value=user.lastName required)
+        
+      .mb-3
+        label.form-label.fw-bold(for="bio") Biografía o Descripción:
+        textarea#bio.form-control(name="bio" rows="3" placeholder="Contale a la comunidad sobre tu estilo fotográfico...") #{user.bio}
 
-    .form-group
-      label(for="avatarUrl") URL de foto de perfil (Opcional):
-      input#avatarUrl.form-control(type="url" name="avatarUrl" value=user.avatarUrl)
+      .mb-3
+        label.form-label.fw-bold(for="avatarUrl") URL de foto de perfil (Opcional):
+        input#avatarUrl.form-control(type="url" name="avatarUrl" value=user.avatarUrl placeholder="https://ejemplo.com/mi-foto.jpg")
 
-    .form-group 
-      label(for="phone") Número de teléfono: 
-      input#phone.form-control(type="tel" name="phone" value=user.phone required)
+      .mb-3
+        label.form-label.fw-bold(for="phone") Número de teléfono:
+        input#phone.form-control(type="tel" name="phone" value=user.phone required)
 
-    br
-    h3 Cambiar contraseña (Opcional)
-    .form-group
-      label(for="currentPassword") Contraseña actual:
-      input#currentPassword.form-control(type="password" name="currentPassword")
-    .form-group
-      label(for="newPassword") Nueva contraseña:
-      input#newPassword.form-control(type="password" name="newPassword")
-    
-    br
-    button.btn.btn-success(type="submit") Guardar Cambios
-    br
-  
-  h2 ¿No querés hacer cambios? 
-    a(href=`/profile`) Volver al perfil
+      hr.my-4
+      
+      h4.h5.text-danger Cambiar contraseña (Opcional)
+      p.text-muted.small Dejar en blanco si no deseás modificar tu clave actual.
+      
+      .mb-3
+        label.form-label(for="currentPassword") Contraseña actual:
+        input#currentPassword.form-control(type="password" name="currentPassword")
+      .mb-3
+        label.form-label(for="newPassword") Nueva contraseña:
+        input#newPassword.form-control(type="password" name="newPassword")
+      
+      .d-flex.justify-content-between.align-items-center.mt-4
+        button.btn.btn-success(type="submit") Guardar Cambios
+        a.text-decoration-none(href=`/user/profile/${user.id}`) Volver a mi perfil
 

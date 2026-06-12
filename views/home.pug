@@ -23,18 +23,18 @@ block content
           .col-md-4.mb-4
             .card.h-100.shadow-sm
               .position-relative
-                a(href=`/photo/${photo.id}`)
+                a(href=`/photo-detail/${photo.id}`)
                   img.card-img-top(src=photo.url, alt=photo.title, style="height: 250px; object-fit: cover;")
                 if photo.hasWatermark
-                  .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.3; color: white; font-size: 1.5rem; font-weight: bold; text-shadow: 1px 1px 3px #000; transform: rotate(-30deg); width: 80%; text-center: center;") #{photo.watermarkText || '© Copyright'}
+                  .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.3; color: white; font-size: 1.5rem; font-weight: bold; text-shadow: 1px 1px 3px #000; transform: rotate(-30deg); width: 80%; text-align: center;") #{photo.watermarkText || '© Copyright'}
               
               .card-body.d-flex.flex-column.justify-content-between
                 div
                   h3.h6.card-title.mb-1 #{photo.title}
-                  p.text-muted.small.mb-2 Por @#{photo.author.userName}
+                  p.text-muted.small.mb-2 Por @#{photo.author ? photo.author.userName : 'Anónimo'}
                 .d-flex.justify-content-between.align-items-center
-                  span.text-warning.fw-bold ⭐ #{photo.ratingAverage} 
-                    span.text-muted.small.fw-normal (#{photo.ratingCount} votos)
+                  span.text-warning.fw-bold ⭐ #{photo.ratingAverage || 0} 
+                    span.text-muted.small.fw-normal (#{photo.ratingCount || 0} votos)
                   if photo.isForSale
                     span.badge.bg-success $#{photo.price}
     else
@@ -53,7 +53,7 @@ block content
           .col-md-3.mb-4
             .card.h-100.border-0.shadow-sm
               .position-relative
-                a(href=`/photo/${photo.id}`)
+                a(href=`/photo-detail/${photo.id}`)
                   img.card-img-top.rounded(src=photo.url, alt=photo.title, style="height: 200px; object-fit: cover;")
                 if photo.hasWatermark
                   .position-absolute.top-50.start-50.translate-middle(style="pointer-events: none; opacity: 0.3; color: white; font-size: 1.2rem; font-weight: bold; text-shadow: 1px 1px 3px #000; transform: rotate(-30deg);") #{photo.watermarkText}
@@ -61,7 +61,7 @@ block content
               .card-body.p-2
                 h4.h6.mb-0.text-truncate #{photo.title}
                 .d-flex.justify-content-between.align-items-center.mt-1
-                  small.text-muted @#{photo.author.userName}
+                  small.text-muted @#{photo.author ? photo.author.userName : 'Anónimo'}
                   if !photo.hasWatermark
                     span.badge.bg-light.text-dark.small.border Libre de derechos
     else

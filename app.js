@@ -9,6 +9,8 @@ import authRutes from "./routes/auth.js";
 import photoRutes from "./routes/photos.js";
 import notificationRoutes from "./routes/notifications.js";
 import collectionRoutes from "./routes/collections.js";
+import messageRoutes from "./routes/messages.js";
+import userRoutes from "./routes/users.js";
 import sequelize from "./models/config.js";
 import "./models/sync.js";
 
@@ -21,7 +23,7 @@ app.set("views", "./views");
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(cookieParser(COOKIE_SECRET));
+app.use(cookieParser(COOKIE_SECRET));
 
 app.use((req, res, next) => {
   res.locals.csrfToken = generateCsrfToken(req, res);
@@ -36,6 +38,8 @@ app.use("/", authRutes);
 app.use("/", photoRutes);
 app.use("/", notificationRoutes);
 app.use("/", collectionRoutes);
+app.use("/", messageRoutes);
+app.use("/", userRoutes);
 
 app.use((error, req, res, next) => {
   if (error.code === "EBADCSRFTOKEN") {

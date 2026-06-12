@@ -13,34 +13,30 @@ block content
         each notif in notifications
           li(class=`list-group-item d-flex justify-content-between align-items-center ${notif.isRead ? 'bg-light' : 'border-start border-primary border-4'}`)
             div
-              span.fw-bold @#{notif.sender.userName} 
+              span.fw-bold @#{notif.sender ? notif.sender.userName : 'Usuario'} 
               
-              // Renderizado condicional según el Tipo de Evento (Req 5)
               if notif.type === 'comment'
-
                 | comentó tu publicación 
-                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+                a(href=`/photo-detail/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
               else if notif.type === 'rate'
                 | valorizó tu imagen 
-                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+                a(href=`/photo-detail/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
               else if notif.type === 'interest'
                 span.badge.bg-success.me-1 Venta
-
                 | marcó 
                 strong "Me interesa" 
                 | en tu foto 
-                a(href=`/photo/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
+                a(href=`/photo-detail/${notif.photoId}`).text-decoration-none "${notif.photoTitle}"
                 br
                 small.text-success.fw-bold 📩 Se habilitó un canal de mensajería en su perfil.
               else if notif.type === 'follow'
-
                 | comenzó a seguirte.
 
               br
               small.text-muted #{notif.createdAt || 'Hace un momento'}
             
             if !notif.isRead
-              form(action=`/notifications/${notif.id}/read` method="POST")
+              form(action=`/notifications/read/${notif.id}` method="POST")
                 input(type="hidden" name="_csrf" value=csrfToken)
                 button.btn.btn-outline-secondary.btn-sm(type="submit") ✅ Marcar como leída
     else

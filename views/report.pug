@@ -10,15 +10,15 @@ block content
     
     .alert.alert-warning.small
       strong Importante: 
-      | Cuando una imagen acumula más de 3 denuncias de diferentes usuarios, la publicación se congelará y será enviada a la lista de revisión del validador de contenidos.
+      | Cuando una imagen acumula más de 3 denuncias de diferentes usuarios, la publicación se congelará automáticamente y será enviada a la lista de revisión del validador de contenidos.
 
-    form(action="/report" method="POST")
+    form(action=`/photo-detail/${photoId}/report` method="POST" class="shadow-sm p-4 border rounded bg-white")
       input(type="hidden" name="_csrf" value=csrfToken)
       input(type="hidden" name="photoId" value=photoId)
 
-      .form-group.mb-3
+      .mb-3
         label.form-label.fw-bold(for="reason") Motivo del reporte:
-        select#reason.form-control(name="reason" required)
+        select#reason.form-select(name="reason" required)
           option(value="") -- Seleccioná una opción obligatoria --
           option(value="derechos_autor") Infracción de Derechos de Autor (Plagio)
           option(value="contenido_inapropiado") Contenido violento o explícito
@@ -26,7 +26,7 @@ block content
           option(value="spam") Spam o publicidad engañosa
           option(value="otro") Otro motivo (Especificar en la justificación)
 
-      .form-group.mb-3
+      .mb-3
         label.form-label.fw-bold(for="details") Justificación de la denuncia:
         textarea#details.form-control(name="details" rows="4" placeholder="Debe describir de forma clara el motivo por el cual la imagen infringe las normas..." required)
 
@@ -37,7 +37,4 @@ block content
       button.btn.btn-danger.w-100(type="submit") Enviar Reporte Comunitario
       
     .text-center.mt-4
-      p ¿Cambiaste de opinión? 
-        a(href=`/photo/${photoId}`).text-decoration-none Cancelar y regresar a la fotografía
-
-
+      a.btn.btn-link.text-decoration-none(href=`/photo-detail/${photoId}`) ↩️ Cancelar y regresar a la fotografía

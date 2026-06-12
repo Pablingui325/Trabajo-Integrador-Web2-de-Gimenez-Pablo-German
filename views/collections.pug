@@ -27,13 +27,13 @@ block content
           .card.h-100.shadow-sm
             .card-header.bg-dark.text-white.d-flex.justify-content-between
               h3.h6.mb-0 📂 #{collection.name}
-              span.badge.bg-secondary #{collection.photos.length} elementos
+              span.badge.bg-secondary #{collection.photos ? collection.photos.length : 0} elementos
             .card-body
-              if collection.photos.length > 0
+              if collection.photos && collection.photos.length > 0
                 .row.g-2
                   each photo in collection.photos
                     .col-4
-                      a(href=`/photo/${photo.id}`)
+                      a(href=`/photo-detail/${photo.id}`)
                         img.img-fluid.rounded(src=photo.url, alt=photo.title, style="height: 80px; width: 100%; object-fit: cover;")
               else
                 p.text-muted.small.mb-0 Esta colección está vacía. Añadí fotos desde el detalle de cualquier publicación.
@@ -49,7 +49,7 @@ block content
       each fav in favorites
         .col-md-3.mb-3
           .card
-            a(href=`/photo/${fav.id}`)
+            a(href=`/photo-detail/${fav.id}`)
               img.card-img-top(src=fav.url, alt=fav.title, style="height: 150px; object-fit: cover;")
             .card-body.p-2.text-center
               h4.h6.text-truncate.mb-0 #{fav.title}

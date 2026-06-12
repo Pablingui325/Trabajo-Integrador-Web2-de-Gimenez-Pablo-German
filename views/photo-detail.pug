@@ -10,46 +10,43 @@ block content
         img.img-fluid.w-100(src=photo.url, alt=photo.title, style="max-height: 600px; object-fit: contain; background-color: #f8f9fa;")
 
     .col-md-4 
-      header.photo-author.mb-3 
-        img(src=photo.author.avatarUrl || "/images/default-avatar.png", alt=photo.author.userName, style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;")
-        span for 
-        a(href=`/profile/${photo.author.userName}`) #{photo.author.firstName} #{photo.author.lastName}
+      header.photo-author.mb-3.d-flex.align-items-center
+        img(src=photo.author.avatarUrl || "/images/default-avatar.png", alt=photo.author.userName, style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px; object-fit: cover;")
+        div
+          span Por 
+          a(href=`/user/profile/${photo.author.id}`).fw-bold.text-decoration-none @#{photo.author.userName}
       
       h1 #{photo.title}
-      p.text-muted Publicando #{photo.createdAt || 'recientemente'}
-      p #{photo.description || 'Sin descripcion.'}
+      p.text-muted.small Publicado: #{photo.createdAt || 'recientemente'}
+      p #{photo.description || 'Sin descripción.'}
 
       if photo.tags && photo.tags.length > 0
-        p 
+        .mb-3
           each tag in photo.tags 
             span.badge.bg-secondary.me-1 ##{tag}
         
       hr
 
       .d-flex.gap-2.mb-4
-        button.btn.btn-light ❤️ #{photo.likesCount || 0} Me gusta
-        button.btn.btn-light 🔗 Compartir
-        a.btn.btn-warning(href=`/report?photoId=${photo.id}`) ⚠️ Reportar
+        button.btn.btn-light.btn-sm ❤️ #{photo.likesCount || 0} Me gusta
+        a.btn.btn-warning.btn-sm(href=`/photo-detail/${photo.id}/report`) ⚠️ Reportar
 
-      .d-flex.gap-2.mb-3
-        form(action="/favorites/add" method="POST" style="display:inline;")
-          input(type="hidden" name="_csrf" value=csrfToken)
-          input(type="hidden" name="photoId" value=photo.id)
-          button.btn.btn-outline-primary.btn-sm(type="submit") ⭐ Guardar en Favoritos
-
-        form(action="/collections/add-photo" method="POST" style="display:inline;")
-          input(type="hidden" name="_csrf" value=csrfToken)
-          input(type="hidden" name="photoId" value=photo.id)
+      .card.bg-light.mb-3.p-2
+        h5.h6.mb-2 Guardar publicación
+        .d-flex.flex-column.gap-2
+          form(action="/collections/add" method="POST")
+            input(type="hidden" name="_csrf" value=csrfToken)
+            input(type="hidden" name="photoId" value=photo.id)
             .input-group.input-group-sm
               select.form-select(name="collectionId" required)
-                option(value="") -- Guardar en Colección --
+                option(value="") -- Seleccionar Colección --
                 if userCollections
                   each col in userCollections
-                option(value=col.id) #{col.name}
+                    option(value=col.id) #{col.name}
               button.btn.btn-primary(type="submit") 📁 Añadir
 
       if !isAuthor
-        form(action=`/photo/${photo.id}/rate` method="POST" class="mb-4")
+        form(action=`/photo-detail/${photo.id}/rate` method="POST" class="mb-4")
           input(type="hidden" name="_csrf" value=csrfToken)
           label.form-label.fw-bold Valorar esta fotografía:
           .d-flex.gap-2
@@ -61,35 +58,34 @@ block content
               option(value="5") 5 ★
             button.btn.btn-warning.btn-sm(type="submit") Votar
 
-
       if photo.isForSale
         .card.border-success.mb-4
           .card-body
             h4.card-title.text-success Precio: $#{photo.price}
-            p.card-text.small Licencia comercial de uso digital incluida.
-            form(action="/interest" method="POST")
-              input(type="hidden" name="_csrf" value=csrfToken)
-              input(type="hidden" name="photoId" value=photo.id)
-              button.btn.btn-success.w-100(type="submit") 📩 Me interesa comprar
+            p.card-text.small Licencia de uso digital incluida.
+            if !isAuthor
+              form(action="/messages/send" method="POST")
+                input(type="hidden" name="_csrf" value=csrfToken)
+                input(type="hidden" name="receiverId" value=photo.author.id)
+                input(type="hidden" name="contenido" value=`Hola, me interesa comprar tu fotografía titulada "${photo.title}".`)
+                button.btn.btn-success.w-100(type="submit") 📩 Me interesa comprar
 
-       hr
+      hr
 
-        h3 Comentarios
+      h3.h5 Comentarios
       
-        if comments && comments.length > 0
-          ul.list-unstyled.mb-4(style="max-height: 250px; overflow-y: auto;")
-            each comment in comments
-              li.mb-2.border-bottom.pb-2
-                strong
-                  a(href=`/profile/${comment.author.userName}`).text-decoration-none #{comment.author.userName}
-                p.mb-0.small #{comment.text}
-        else
-          p.text-muted.small No hay comentarios en esta foto. ¡Sé el primero!
+      if comments && comments.length > 0
+        ul.list-unstyled.mb-4(style="max-height: 250px; overflow-y: auto;")
+          each comment in comments
+            li.mb-2.border-bottom.pb-2
+              strong
+                a(href=`/user/profile/${comment.author.id}`).text-decoration-none @#{comment.author.userName}
+              p.mb-0.small.text-secondary #{comment.text}
+      else
+        p.text-muted.small No hay comentarios en esta foto. ¡Sé el primero!
 
-        form(action=`/photo/${photo.id}/comment` method="POST")
-          input(type="hidden" name="_csrf" value=csrfToken)
-          .form-group.mb-2
-            textarea.form-control(name="commentText" rows="2" placeholder="Escribí un comentario respetuoso..." required)
-          button.btn.btn-primary.btn-sm(type="submit") Comentar
-
-     
+      form(action=`/photo-detail/${photo.id}/comment` method="POST")
+        input(type="hidden" name="_csrf" value=csrfToken)
+        .form-group.mb-2
+          textarea.form-control(name="commentText" rows="2" placeholder="Escribí un comentario respetuoso..." required)
+        button.btn.btn-primary.btn-sm(type="submit") Comentar

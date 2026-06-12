@@ -45,7 +45,7 @@ block content
             br
             span.text-muted.small Solo visible para usuarios registrados. Habilita protección visual.
 
-        .form-group.mt-2#watermarkSettings
+        .form-group.mt-2#watermarkSettings(style="display: none;")
           label.form-label.fw-bold(for="watermarkText") Texto personalizado para la marca de agua:
           input#watermarkText.form-control(type="text" name="watermarkText" placeholder="Ej: © TuNombre 2026")
           small.text-muted Si eliges Copyright, la aplicación estampará este texto sobre tu imagen de forma automática.
@@ -57,7 +57,7 @@ block content
           input#isForSale.form-check-input(type="checkbox" name="isForSale" value="true")
           label.form-check-label(for="isForSale") Habilitar opción de adquisición comercial
           
-        .form-group 
+        .form-group#priceGroup
           label.form-label(for="price") Precio de referencia (Opcional):
           input#price.form-control(type="number" name="price" min="0" step="0.01" placeholder="Ej: 15.00")
           small.text-muted Si un usuario presiona "Me interesa", el sistema abrirá un chat privado y compartirá tu perfil para que lleguen a un acuerdo directo.
@@ -67,4 +67,26 @@ block content
     hr.my-4
     .text-center
       h2.h5 ¿No querés publicar nada?
-      a.btn.btn-outline-secondary.btn-sm(href="/") Volver al inicio
+      a.btn.btn-outline-secondary.btn-sm(href="/feed") Volver al feed principal
+
+  script.
+    // Lógica dinámica interactiva para mejorar la experiencia de usuario en la entrega
+    const radioCopyright = document.getElementById('licenseCopyright');
+    const radioNoCopyright = document.getElementById('licenseNoCopyright');
+    const watermarkSettings = document.getElementById('watermarkSettings');
+    const watermarkInput = document.getElementById('watermarkText');
+
+    radioCopyright.addEventListener('change', () => {
+      if(radioCopyright.checked) {
+        watermarkSettings.style.display = 'block';
+        watermarkInput.setAttribute('required', 'true');
+      }
+    });
+
+    radioNoCopyright.addEventListener('change', () => {
+      if(radioNoCopyright.checked) {
+        watermarkSettings.style.display = 'none';
+        watermarkInput.removeAttribute('required');
+        watermarkInput.value = '';
+      }
+    });

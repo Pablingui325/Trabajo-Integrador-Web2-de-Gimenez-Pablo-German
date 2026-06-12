@@ -1,0 +1,42 @@
+extends ./layout.pug
+
+block content
+  .container.mt-4
+    //- Cabecera del Chat
+    .chat-header.p-3.bg-dark.text-white.rounded-top
+      h4 Chat con #{otroUsuario.userName}
+      p.small.text-muted.mb-0 Conversación privada con fines de acuerdo de licencias
+
+    //- Contenedor de Historial de Mensajes
+    .chat-box.border.p-3.bg-light(style="height: 400px; overflow-y: scroll;")
+      if mensajes.length > 0
+        each msg in mensajes
+          //- Verificamos quién envió el mensaje para alinearlo a la derecha o izquierda
+          if msg.senderId === miId
+            .d-flex.justify-content-end.mb-3
+              .message-bubble.bg-primary.text-white.p-2.rounded(style="max-width: 70%;")
+                p.mb-1= msg.contenido
+                small.text-white-50.d-block.text-right= new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+          else
+            .d-flex.justify-content-start.mb-3
+              .message-bubble.bg-secondary.text-white.p-2.rounded(style="max-width: 70%;")
+                strong.d-block.small= msg.Remitente.userName
+                p.mb-1= msg.contenido
+                small.text-white-50.d-block= new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+      else
+        .text-center.text-muted.my-5
+          p No hay mensajes previos. ¡Inicia la conversación!
+
+    //- Formulario para Enviar Nuevo Mensaje
+    .chat-footer.p-3.border.bg-white.rounded-bottom
+      form(action="/messages/send" method="POST")
+        //- Token CSRF obligatorio para seguridad
+        input(type="hidden" name="_csrf" value=csrfToken)
+        
+        //- Pasamos oculto el ID del destinatario para saber a quién va el mensaje
+        input(type="hidden" name="receiverId" value=otroUsuario.id)
+        
+        .input-group
+          textarea.form-control(name="contenido" rows="2" placeholder="Escribe tu mensaje aquí..." required)
+          .input-group-append.align-self-center.ml-2
+            button.btn.btn-success(type="submit") Enviar Mensaje

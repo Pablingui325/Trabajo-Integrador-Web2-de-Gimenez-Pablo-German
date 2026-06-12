@@ -9,7 +9,7 @@ block content
 
   .card.bg-light.mb-4.shadow-sm
     .card-body
-      form(action="/search" method="GET")
+      form(action="/search/results" method="GET")
         .row.g-3
           .col-md-4
             label.form-label.fw-bold(for="keyword") Término de búsqueda:
@@ -43,11 +43,11 @@ block content
 
           .col-md-4.d-flex.align-items-end.gap-2
             button.btn.btn-primary.w-100(type="submit") Aplicar Filtros
-            a.btn.btn-outline-secondary.w-100(href="/search") Limpiar Filtros
+            a.btn.btn-outline-secondary.w-100(href="/search/results") Limpiar Filtros
 
   hr.my-4
 
-  h2.h4.mb-3 Resultados de la búsqueda (#{results.length})
+  h2.h4.mb-3 Resultados de la búsqueda (#{results ? results.length : 0})
   
   if results && results.length > 0
     .row
@@ -55,10 +55,10 @@ block content
         .col-md-3.mb-4
           .card.h-100.shadow-sm
             .position-relative
-              a(href=`/photo/${photo.id}`)
+              a(href=`/photo-detail/${photo.id}`)
                 img.card-img-top(src=photo.url, alt=photo.title, style="height: 180px; object-fit: cover;")
               
-              if photo.hasCopyright
+              if photo.hasWatermark
                 span.badge.bg-dark.position-absolute.top-0.start-0.m-2 © CR
               else
                 span.badge.bg-light.text-dark.position-absolute.top-0.start-0.m-2 CC0 Public
@@ -66,7 +66,7 @@ block content
             .card-body.p-2.d-flex.flex-column.justify-content-between
               div
                 h3.h6.card-title.text-truncate.mb-1 #{photo.title}
-                p.text-muted.small.mb-2 Por @#{photo.author.userName}
+                p.text-muted.small.mb-2 Por @#{photo.author ? photo.author.userName : 'Anónimo'}
               
               .d-flex.justify-content-between.align-items-center.mt-2.border-top.pt-2
                 span.text-warning.small ⭐ #{photo.ratingAverage || 0}
