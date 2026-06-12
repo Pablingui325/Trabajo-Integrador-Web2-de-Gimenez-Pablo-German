@@ -28,8 +28,8 @@ Photo.belongsToMany(User, { through: "Rating", as: "voters" });
 // 5. Mensajería Privada (Remitente y Destinatario)
 User.hasMany(Message, { foreignKey: "senderId", as: "sentMessages" });
 User.hasMany(Message, { foreignKey: "receiverId", as: "receivedMessages" });
-Message.belongsTo(User, { foreignKey: "senderId", as: "sender" });
-Message.belongsTo(User, { foreignKey: "receiverId", as: "receiver" });
+Message.belongsTo(User, { foreignKey: "senderId", as: "Remitente" });
+Message.belongsTo(User, { foreignKey: "receiverId", as: "Destinatario" });
 Photo.hasMany(Message, { foreignKey: "photoId" }); // Vincula sobre qué foto nació el interés
 
 // 6. Seguidores (Muchos a Muchos autovinculada con la tabla User)
