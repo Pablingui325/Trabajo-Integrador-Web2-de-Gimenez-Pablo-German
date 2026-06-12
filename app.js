@@ -52,18 +52,17 @@ app.use((error, req, res, next) => {
 });
 
 //CONEXION A BD
-sequelize
-  .sync({ alter: true })
-  .then(() => {
-    //SERVIDOR
-    app.listen(PORT, (err) => {
-      if (err) {
-        console.error("Error al iniciar el servidor:", err);
-        return;
-      }
-      console.log(`Servidor corriendo en el puerto ${PORT}`);
+async function main() {
+  try {
+    await sequelize.sync({ force: true });
+    console.log("Base de datos sincronizada correctamente.");
+
+    app.listen(PORT, () => {
+      console.log(`Servidor corriendo en el puerto:${PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("Error sincronizando con bd:", err);
-  });
+  } catch (error) {
+    console.error("Error al conectar o sincronizar la base de datos:", error);
+  }
+}
+
+main();

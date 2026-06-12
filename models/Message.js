@@ -10,9 +10,9 @@ Message.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    content: {
+    contenido: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: false, // Emparejado con el input oculto que envía "Me interesa comprar tu fotografía..."
     },
     isRead: {
       type: DataTypes.BOOLEAN,

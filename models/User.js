@@ -15,10 +15,28 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+      validate: { isEmail: true },
     },
     userName: {
       type: DataTypes.STRING(100),
       allowNull: false,
+      unique: true,
+    },
+    firstName: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    bio: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    avatarUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     birthDay: {
       type: DataTypes.DATEONLY,
@@ -30,23 +48,38 @@ User.init(
     },
     phone: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING(100),
       allowNull: false,
       set(value) {
-        // este metodo 'set' intercepta la contraseña en texto plano antes de guardarla
-        const salt = bcrypt.genSaltSync(10); //genera una clave aleatoria unica (salt)
-        const hash = bcrypt.hashSync(value, salt); //mezcla la contraseña con el salt
-        this.setDataValue("password", hash); //guarda el resultado encriptado
+        if (value) {
+          const salt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(value, salt);
+          this.setDataValue("password", hash);
+        }
       },
+    },
+    // Contadores para optimizar la cabecera del perfil (Evita COUNTs pesados)
+    followersCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    followingCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true, // Si acumula 3 fotos dadas de baja por denuncias, se setea en false
     },
   },
   {
-    sequelize, // necesario para conectarse a la bd
-    modelName: "User", //nombre del modelo
-    tableName: "user", //nombre de la tabla
-    createdAt: true, //cada vez que crea un usuario coloca la fecha de creacion
-    deletedAt: true, //cada vez que elimina un usuario coloca la fecha de creacion
+    sequelize,
+    modelName: "User",
+    tableName: "user",
+    timestamps: true,
+    paranoid: true, // Habilita borrado lógico real usando 'deletedAt' automáticamente
   },
 );

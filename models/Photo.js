@@ -19,16 +19,16 @@ Photo.init(
       allowNull: true,
     },
     url: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING, // Ampliado por si las URLs de almacenamiento son largas
       allowNull: false,
     },
     licenseType: {
-      type: DataTypes.ENUM("Copyright", "Sin Copyright"),
+      type: DataTypes.ENUM("copyright", "no_copyright"), // Sincronizado en minúsculas con Pug y Rutas
       allowNull: false,
     },
     watermarkText: {
       type: DataTypes.STRING(100),
-      allowNull: true, // Solo si es Copyright y el autor quiere personalizarlo
+      allowNull: true,
     },
     commentsOpen: {
       type: DataTypes.BOOLEAN,
@@ -36,9 +36,19 @@ Photo.init(
     },
     isBlocked: {
       type: DataTypes.BOOLEAN,
-      defaultValue: false, // Se congela la edición si tiene denuncias
+      defaultValue: false, // Pasa a true si reportCount > 3 (Congela visualización pública)
     },
-    // Contadores denormalizados para optimizar el Home y las búsquedas potentes
+    // Datos de Negociación Comercial
+    isForSale: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      defaultValue: 0.0,
+    },
+    // Contadores denormalizados para optimizar las consultas del Home y Búsqueda
     ratingAverage: {
       type: DataTypes.FLOAT,
       defaultValue: 0.0,
@@ -56,6 +66,6 @@ Photo.init(
     sequelize,
     modelName: "Photo",
     tableName: "photo",
-    timestamps: true, // Habilita createdAt y updatedAt automáticamente
+    timestamps: true,
   },
 );

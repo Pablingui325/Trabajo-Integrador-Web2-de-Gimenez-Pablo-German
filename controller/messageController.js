@@ -1,5 +1,4 @@
-import Message from "../models/Message.js";
-import User from "../models/User.js";
+import { Comment, Photo, User } from "../models/sync.js";
 
 // 1. Enviar o iniciar mensaje de "Me interesa"
 export const enviarMensaje = async (req, res) => {

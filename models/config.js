@@ -8,6 +8,7 @@ const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
+  logging: false, //esto evita llenar la consola de logs innecesarios
 });
 
 export default sequelize;

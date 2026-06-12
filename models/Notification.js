@@ -10,17 +10,21 @@ Notification.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    eventType: {
-      type: DataTypes.ENUM("Comment", "Rating", "Interested", "Follow"),
+    type: {
+      type: DataTypes.ENUM("comment", "rate", "interest", "follow"),
       allowNull: false,
     },
     isRead: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    referenceId: {
+    photoId: {
       type: DataTypes.INTEGER,
-      allowNull: true, // ID de la foto o entidad relacionada al evento si aplica
+      allowNull: true, // Queda nulo si el tipo de evento es 'follow'
+    },
+    photoTitle: {
+      type: DataTypes.STRING(100),
+      allowNull: true,
     },
   },
   {

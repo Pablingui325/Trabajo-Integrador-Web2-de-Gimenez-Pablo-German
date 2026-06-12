@@ -1,41 +1,29 @@
-import express from "express";
-import {
-  mostrarFeed,
-  mostrarDetalleFoto,
-  crearPublicacion,
-  comentarFoto,
-  denunciarFoto,
-  valorarFoto,
-  buscarFotos,
-} from "../controller/photoController.js";
+import { Router } from "express";
+import { photoController } from "../controller/photoController.js";
 import { doubleCsrfProtection } from "../configuration/csrfConfig.js";
 
 const router = express.Router();
 
-// --- GESTIÓN DE CONTENIDOS (Vistas y Acciones) ---
-
-// Muestra las publicaciones en la Home (manejando el balance con/sin Copyright)
-router.get("/feed", mostrarFeed);
+router.get("/feed", photoController);
 
 // Formulario para subir una foto nueva
-router.get("/upload", (req, res) => res.render("upload"));
+router.get("/upload", photoController.createPhoto);
 // Acción de crear la publicación (Guarda en la BD la imagen, etiquetas y licencia)
-router.post("/upload", doubleCsrfProtection, crearPublicacion);
+router.post("/upload", doubleCsrfProtection);
 
 // Ver el detalle de una foto específica (pasa la foto, sus comentarios y valoraciones)
-router.get("/photo-detail/:id", mostrarDetalleFoto);
+router.get("/photo-detail/:id", photoController.getPhotoDetail);
 
 // Agregar un comentario a una publicación
-router.post("/photo-detail/:id/comment", doubleCsrfProtection, comentarFoto);
+router.post("/photo-detail/:id/comment", doubleCsrfProtection);
 
 // Denunciar una publicación o comentario (Activa la lógica de las 3 denuncias y baja automática)
-router.post("/photo-detail/:id/report", doubleCsrfProtection, denunciarFoto);
+router.post("/photo-detail/:id/report", doubleCsrfProtection);
 
 // Valorar una imagen (Controla que el usuario vote una sola vez y calcula el promedio)
-router.post("/photo-detail/:id/rate", doubleCsrfProtection, valorarFoto);
+router.post("/photo-detail/:id/rate", doubleCsrfProtection);
 
-// --- MOTOR DE BÚSQUEDA ---
 // Procesa los filtros combinados ingresados en search.pug
-router.get("/search/results", buscarFotos);
+router.get("/search/results", photoController.searchPhotos);
 
 export default router;

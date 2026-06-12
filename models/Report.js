@@ -10,21 +10,27 @@ Report.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    targetType: {
-      type: DataTypes.ENUM("Photo", "Comment"),
-      allowNull: false, // Define si la denuncia va a una foto o a un comentario
-    },
-    targetId: {
-      type: DataTypes.INTEGER,
-      allowNull: false, // ID de la foto o comentario denunciado
-    },
     reason: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.ENUM(
+        "derechos_autor",
+        "contenido_inapropiado",
+        "acoso_odio",
+        "spam",
+        "otro",
+      ),
       allowNull: false,
     },
-    description: {
+    details: {
       type: DataTypes.TEXT,
       allowNull: false,
+    },
+    photoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false, // Relación directa con la foto denunciada (enviada desde el input hidden)
+    },
+    commentId: {
+      type: DataTypes.INTEGER,
+      allowNull: true, // Queda nulo si la denuncia fue hecha directamente a la publicación y no a un comentario
     },
   },
   {

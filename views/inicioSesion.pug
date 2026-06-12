@@ -1,21 +1,26 @@
 extends ./layout.pug 
 
 block metadata
-  title Fotaza - Inicio Sesion
+  title Fotaza - Inicio de Sesión
 
 block content 
-  h1 Bienvenido a Fotaza
-  h2 Inicia sesion para ingresar si ya tienes un usuario 
-  form(action="/login" method="POST")
-    input(type="hidden" name="_csrf" value=csrfToken)
-    .form-group
-      label(for="email") Correo: 
-      input#email.form-control(type="email" name="email" required)
-    .form-group
-      label(for="password") Contraseña: 
-      input#password.form-control(type="password" name="password" required)
-    br
-    button.btn.btn-primary(type="submit") Ingresar
-    br
-  h2 ¿No tenes cuenta? Podes crear una: 
-    a(href="./signup") Crear Usuario 
+  .container.my-5(style="max-width: 500px;")
+    h1.text-center.mb-3 📸 Bienvenido a Fotaza
+    p.text-muted.text-center Iniciá sesión para ingresar a la comunidad fotográfica.
+    
+    form(action="/login" method="POST" class="shadow-sm p-4 border rounded bg-white")
+      input(type="hidden" name="_csrf" value=csrfToken)
+      
+      .mb-3
+        label.form-label.fw-bold(for="email") Correo Electrónico: 
+        input#email.form-control(type="email" name="email" placeholder="nombre@correo.com" required)
+      
+      .mb-3
+        label.form-label.fw-bold(for="password") Contraseña: 
+        input#password.form-control(type="password" name="password" required)
+      
+      button.btn.btn-primary.w-100.mt-3(type="submit") Ingresar a mi Cuenta
+      
+    .text-center.mt-4
+      p.text-muted ¿No tenés cuenta? 
+        a.fw-bold(href="/signup") Crear un nuevo usuario

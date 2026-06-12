@@ -12,7 +12,7 @@ Collection.init(
     },
     name: {
       type: DataTypes.STRING(100),
-      allowNull: false, // Ej: "Paisajes", "Ideas"
+      allowNull: false, // Ej: "Favoritos", "Blanco y Negro", "Naturaleza"
     },
   },
   {

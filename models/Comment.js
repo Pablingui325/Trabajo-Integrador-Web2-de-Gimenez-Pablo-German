@@ -10,13 +10,13 @@ Comment.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    content: {
+    text: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
     reportCount: {
       type: DataTypes.INTEGER,
-      defaultValue: 0, // Permite al autor ver de forma organizada cuáles borrar
+      defaultValue: 0, //permite al autor moderar o disparar revisiones
     },
   },
   {

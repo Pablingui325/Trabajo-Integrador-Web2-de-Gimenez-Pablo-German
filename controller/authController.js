@@ -1,8 +1,19 @@
-import User from "../models/User.js";
-import bcrypt from "bcrypt"; //para encriptar contraseñas antes de guardar
+import { User } from "../models/sync.js";
+import bcrypt from "bcryptjs"; //para encriptar contraseñas antes de guardar
 
 export const registrarUsuario = async (req, res) => {
-  const { email, userName, password, confirmPassword, terms } = req.body;
+  const {
+    email,
+    firstName,
+    lastName,
+    userName,
+    birthDay,
+    gender,
+    phone,
+    password,
+    confirmPassword,
+    terms,
+  } = req.body;
 
   //validaciones existentes...
   if (!terms) {
